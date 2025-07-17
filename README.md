@@ -2,48 +2,79 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ブラックジャック</title>
   <style>
     body {
-      font-family: sans-serif;
+      font-family: "Segoe UI", sans-serif;
       text-align: center;
-      padding: 20px;
-      margin: 0;
-      background: #f9f9f9;
+      padding: 30px;
+      background: #f3f4f6;
     }
 
     h1 {
-      font-size: 2rem;
-      margin-bottom: 0.5em;
+      font-size: 36px;
+      margin-bottom: 10px;
     }
 
-    .money-area, .bet-area, .button-area, #result {
-      margin: 10px 0;
+    .status-bar {
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+
+    label, input[type="number"] {
+      font-size: 18px;
     }
 
     input[type="number"] {
-      padding: 8px;
-      width: 120px;
-      font-size: 1rem;
-      margin-top: 5px;
+      padding: 5px;
+      width: 80px;
+      text-align: center;
+      margin-left: 10px;
+    }
+
+    .game-area {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    .hand {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: 280px;
+    }
+
+    .hand h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .cards {
+      font-size: 28px;
+      margin: 10px 0;
+      min-height: 40px;
+    }
+
+    .buttons {
+      margin: 20px;
     }
 
     button {
       padding: 10px 20px;
-      font-size: 1rem;
+      font-size: 16px;
       margin: 5px;
       border: none;
-      border-radius: 5px;
-      background-color: #007BFF;
-      color: white;
+      border-radius: 8px;
       cursor: pointer;
       transition: transform 0.2s ease;
     }
 
     button:hover:not(:disabled) {
       transform: scale(1.05);
-      background-color: #0056b3;
     }
 
     button:disabled {
@@ -51,29 +82,30 @@
       cursor: not-allowed;
     }
 
-    .cards {
-      font-size: 2rem;
-      min-height: 2.5em;
-      display: flex;
-      justify-content: center;
-      gap: 0.5em;
-      flex-wrap: wrap;
-      margin-bottom: 5px;
-    }
+    #start-btn { background-color: #3b82f6; color: white; }
+    #hit-btn { background-color: #10b981; color: white; }
+    #stand-btn { background-color: #f59e0b; color: white; }
+    #restart-btn { background-color: #6b7280; color: white; }
 
     #result {
+      font-size: 22px;
+      margin-top: 20px;
       font-weight: bold;
-      font-size: 1.2rem;
+      white-space: pre-wrap;
       opacity: 0;
       transition: opacity 0.5s ease;
-      white-space: pre-wrap;
     }
 
     #result.show {
       opacity: 1;
     }
 
+    .win { color: green; }
+    .lose { color: red; }
+    .draw { color: orange; }
+
     .card-animate {
+      display: inline-block;
       opacity: 0;
       transform: translateY(-20px);
       animation: fadeSlideIn 0.4s ease-out forwards;
@@ -85,91 +117,76 @@
         transform: translateY(0);
       }
     }
-
-    @media (max-width: 600px) {
-      body {
-        padding: 10px;
-      }
-
-      h1 {
-        font-size: 1.5rem;
-      }
-
-      .cards {
-        font-size: 1.5rem;
-      }
-
-      button, input[type="number"] {
-        font-size: 0.9rem;
-        width: 100%;
-        max-width: 200px;
-      }
-    }
   </style>
 </head>
 <body>
   <h1>ブラックジャック</h1>
+  <p class="status-bar">💰 所持金：$<span id="money">1000</span></p>
 
-  <div class="money-area">
-    所持金: <span id="money">1000</span> 円
+  <label>🎯 ベット額：
+    <input type="number" id="bet-input" min="1" value="100">
+  </label>
+
+  <div class="game-area">
+    <div class="hand">
+      <h2>あなたの手札</h2>
+      <div id="player-cards" class="cards"></div>
+      <p>合計: <span id="player-score">0</span></p>
+    </div>
+
+    <div class="hand">
+      <h2>ディーラーの手札</h2>
+      <div id="dealer-cards" class="cards"></div>
+      <p>合計: <span id="dealer-score">?</span></p>
+    </div>
   </div>
 
-  <div class="bet-area">
-    <label for="bet-input">ベット額:</label><br>
-    <input type="number" id="bet-input" min="1" max="1000" value="100">
+  <div class="buttons">
+    <button id="start-btn" onclick="startGame()">ゲーム開始</button>
+    <button id="hit-btn" onclick="hit()" disabled>もう一枚引く</button>
+    <button id="stand-btn" onclick="stand()" disabled>勝負</button>
+    <button id="restart-btn" onclick="resetGame()" style="display:none;">もう一度プレイ</button>
   </div>
 
-  <div class="button-area">
-    <button id="start-btn">ゲーム開始</button>
-    <button id="hit-btn" disabled>ヒット</button>
-    <button id="stand-btn" disabled>スタンド</button>
-    <button id="restart-btn" style="display:none;">リスタート</button>
-  </div>
-
-  <h2>プレイヤー</h2>
-  <div class="cards" id="player-cards"></div>
-  <div>スコア: <span id="player-score">0</span></div>
-
-  <h2>ディーラー</h2>
-  <div class="cards" id="dealer-cards"></div>
-  <div>スコア: <span id="dealer-score">0</span></div>
-
-  <div id="result"></div>
+  <p id="result"></p>
 
   <script>
-    let deck, playerHand, dealerHand, isStand = false, money = 1000, bet = 0;
+    const suits = ['♠', '♥', '♦', '♣'];
+    const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+    const values = {
+      '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
+      '10': 10, 'J': 10, 'Q': 10, 'K': 10, 'A': 11
+    };
 
-    const suits = ["♠", "♥", "♦", "♣"];
-    const ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
-    const values = {"A": 11, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10, "J": 10, "Q": 10, "K": 10};
+    let deck = [], playerHand = [], dealerHand = [];
+    let isStand = false;
+    let money = 1000;
+    let bet = 100;
 
     function createDeck() {
       deck = [];
       for (let suit of suits) {
         for (let rank of ranks) {
-          deck.push({ card: ${suit}${rank}, value: values[rank] });
+          deck.push({ card: rank + suit, value: values[rank] });
         }
       }
-      for (let i = deck.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [deck[i], deck[j]] = [deck[j], deck[i]];
-      }
-    }
-
-    function drawCard() {
-      return deck.pop();
+      deck.sort(() => Math.random() - 0.5);
     }
 
     function calculateScore(hand) {
       let score = hand.reduce((sum, card) => sum + card.value, 0);
-      let aces = hand.filter(c => c.value === 11).length;
-      while (score > 21 && aces--) score -= 10;
+      let aceCount = hand.filter(card => card.card.startsWith('A')).length;
+      while (score > 21 && aceCount > 0) {
+        score -= 10;
+        aceCount--;
+      }
       return score;
     }
 
     function displayCards() {
       const playerCardsEl = document.getElementById("player-cards");
       const dealerCardsEl = document.getElementById("dealer-cards");
+
       playerCardsEl.innerHTML = '';
       dealerCardsEl.innerHTML = '';
 
@@ -177,31 +194,71 @@
         const span = document.createElement("span");
         span.textContent = card.card;
         span.classList.add("card-animate");
-        span.style.animationDelay = ${i * 0.1}s;
+        span.style.animationDelay = `${i * 0.1}s`;
         playerCardsEl.appendChild(span);
       });
 
       dealerHand.forEach((card, i) => {
         const span = document.createElement("span");
-        span.textContent = (isStand || i === 0) ? card.card : "🂠";
+        span.textContent = (isStand || i === 0) ? card.card : '🂠';
         span.classList.add("card-animate");
-        span.style.animationDelay = ${i * 0.1}s;
+        span.style.animationDelay = `${i * 0.1}s`;
         dealerCardsEl.appendChild(span);
       });
 
-      document.getElementById("player-score").textContent = calculateScore(playerHand);
-      document.getElementById("dealer-score").textContent = isStand ? calculateScore(dealerHand) : "?";
+      document.getElementById("player-score").innerText = calculateScore(playerHand);
+      document.getElementById("dealer-score").innerText = isStand ? calculateScore(dealerHand) : '?';
     }
 
     function updateMoneyDisplay() {
-      document.getElementById("money").textContent = money;
+      document.getElementById("money").innerText = money;
+    }
+
+    function hit() {
+      if (isStand) return;
+      playerHand.push(deck.pop());
+      displayCards();
+      if (calculateScore(playerHand) > 21) {
+        lose("バースト！あなたの負けです。");
+      }
+    }
+
+    function stand() {
+      if (isStand) return;
+      isStand = true;
+      while (calculateScore(dealerHand) < 17) {
+        dealerHand.push(deck.pop());
+      }
+      displayCards();
+      const playerScore = calculateScore(playerHand);
+      const dealerScore = calculateScore(dealerHand);
+      if (dealerScore > 21 || playerScore > dealerScore) {
+        win("あなたの勝ちです！");
+      } else if (playerScore < dealerScore) {
+        lose("あなたの負けです。");
+      } else {
+        draw("引き分けです。");
+      }
+    }
+
+    function win(msg) {
+      money += bet;
+      endGame(msg, "win");
+    }
+
+    function lose(msg) {
+      money -= bet;
+      endGame(msg, "lose");
+    }
+
+    function draw(msg) {
+      endGame(msg, "draw");
     }
 
     function endGame(message, resultClass) {
       const resultElem = document.getElementById("result");
       resultElem.innerText = message;
       resultElem.className = resultClass + ' show';
-
       document.getElementById("hit-btn").disabled = true;
       document.getElementById("stand-btn").disabled = true;
       document.getElementById("restart-btn").style.display = "inline-block";
@@ -215,60 +272,45 @@
       }
     }
 
-    document.getElementById("start-btn").onclick = () => {
+    function startGame() {
       bet = parseInt(document.getElementById("bet-input").value);
       if (isNaN(bet) || bet <= 0 || bet > money) {
-        alert("正しいベット額を入力してください。");
+        alert("正しいベット額を入力してください（1〜" + money + "）");
         return;
       }
 
-      isStand = false;
       createDeck();
-      playerHand = [drawCard(), drawCard()];
-      dealerHand = [drawCard(), drawCard()];
+      playerHand = [deck.pop(), deck.pop()];
+      dealerHand = [deck.pop(), deck.pop()];
+      isStand = false;
+
       displayCards();
+      updateMoneyDisplay();
+
+      const result = document.getElementById("result");
+      result.innerText = '';
+      result.className = '';
 
       document.getElementById("hit-btn").disabled = false;
       document.getElementById("stand-btn").disabled = false;
+      document.getElementById("start-btn").disabled = true;
+      document.getElementById("bet-input").disabled = true;
+    }
+
+    function resetGame() {
+      document.getElementById("hit-btn").disabled = true;
+      document.getElementById("stand-btn").disabled = true;
+      document.getElementById("start-btn").disabled = false;
       document.getElementById("restart-btn").style.display = "none";
-      document.getElementById("result").className = "";
-      document.getElementById("result").textContent = "";
-
-      updateMoneyDisplay();
-    };
-
-    document.getElementById("hit-btn").onclick = () => {
-      playerHand.push(drawCard());
-      displayCards();
-      if (calculateScore(playerHand) > 21) {
-        money -= bet;
-        endGame("バースト！あなたの負け！", "lose");
-      }
-    };
-
-    document.getElementById("stand-btn").onclick = () => {
-      isStand = true;
-      while (calculateScore(dealerHand) < 17) {
-        dealerHand.push(drawCard());
-      }
-      displayCards();
-
-      const playerScore = calculateScore(playerHand);
-      const dealerScore = calculateScore(dealerHand);
-      if (dealerScore > 21 || playerScore > dealerScore) {
-        money += bet;
-        endGame("あなたの勝ち！", "win");
-      } else if (dealerScore === playerScore) {
-        endGame("引き分け！", "draw");
-      } else {
-        money -= bet;
-        endGame("あなたの負け！", "lose");
-      }
-    };
-
-    document.getElementById("restart-btn").onclick = () => {
-      document.getElementById("start-btn").click();
-    };
+      document.getElementById("bet-input").disabled = false;
+      document.getElementById("player-cards").innerText = '';
+      document.getElementById("dealer-cards").innerText = '';
+      document.getElementById("player-score").innerText = '0';
+      document.getElementById("dealer-score").innerText = '?';
+      const result = document.getElementById("result");
+      result.innerText = '';
+      result.className = '';
+    }
   </script>
 </body>
 </html>
