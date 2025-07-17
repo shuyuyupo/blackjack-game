@@ -5,20 +5,28 @@
   <title>ブラックジャック</title>
   <style>
     body {
-      font-family: "Segoe UI", sans-serif;
+      font-family: "Arial Rounded MT Bold", "Comic Sans MS", cursive;
       text-align: center;
       padding: 30px;
-      background: #f3f4f6;
+      background: linear-gradient(to bottom right, #e0f7ff, #ccf2ff);
+      color: #333;
     }
 
     h1 {
-      font-size: 36px;
-      margin-bottom: 10px;
+      font-size: 40px;
+      margin-bottom: 20px;
+      color: #00bfff;
+      text-shadow: 1px 1px 3px #fff;
     }
 
     .status-bar {
       font-size: 20px;
       margin-bottom: 15px;
+      background: #e0faff;
+      padding: 10px 20px;
+      border-radius: 20px;
+      display: inline-block;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
     label, input[type="number"] {
@@ -26,10 +34,12 @@
     }
 
     input[type="number"] {
-      padding: 5px;
-      width: 80px;
+      padding: 8px;
+      width: 100px;
+      border-radius: 12px;
+      border: 2px solid #00bfff;
       text-align: center;
-      margin-left: 10px;
+      background: #fff;
     }
 
     .game-area {
@@ -41,20 +51,22 @@
     }
 
     .hand {
-      background: white;
+      background: #f0fcff;
       padding: 20px;
-      border-radius: 12px;
+      border-radius: 20px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      width: 280px;
+      width: 300px;
+      border: 2px dashed #00ced1;
     }
 
     .hand h2 {
-      font-size: 20px;
+      font-size: 22px;
       margin-bottom: 10px;
+      color: #1e90ff;
     }
 
     .cards {
-      font-size: 28px;
+      font-size: 32px;
       margin: 10px 0;
       min-height: 40px;
     }
@@ -68,9 +80,10 @@
       font-size: 16px;
       margin: 5px;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       cursor: pointer;
       transition: transform 0.2s ease;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
     button:hover:not(:disabled) {
@@ -78,15 +91,15 @@
     }
 
     button:disabled {
-      background-color: #ccc;
+      background-color: #ddd;
       cursor: not-allowed;
     }
 
-    #start-btn { background-color: #3b82f6; color: white; }
-    #hit-btn { background-color: #10b981; color: white; }
-    #stand-btn { background-color: #f59e0b; color: white; }
-    #restart-btn { background-color: #6b7280; color: white; }
-    #reset-all-btn { background-color: #ef4444; color: white; }
+    #start-btn { background-color: #00bfff; color: white; }
+    #hit-btn { background-color: #87ceeb; color: white; }
+    #stand-btn { background-color: #4682b4; color: white; }
+    #restart-btn { background-color: #5f9ea0; color: white; }
+    #reset-all-btn { background-color: #1e90ff; color: white; }
 
     #result {
       font-size: 22px;
@@ -101,9 +114,9 @@
       opacity: 1;
     }
 
-    .win { color: green; }
-    .lose { color: red; }
-    .draw { color: orange; }
+    .win { color: #32cd32; }
+    .lose { color: #dc143c; }
+    .draw { color: #1e90ff; }
 
     .card-animate {
       display: inline-block;
