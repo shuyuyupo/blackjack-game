@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -85,6 +86,7 @@
     #hit-btn { background-color: #10b981; color: white; }
     #stand-btn { background-color: #f59e0b; color: white; }
     #restart-btn { background-color: #6b7280; color: white; }
+    #reset-all-btn { background-color: #ef4444; color: white; }
 
     #result {
       font-size: 22px;
@@ -144,7 +146,8 @@
     <button id="start-btn" onclick="startGame()">ゲーム開始</button>
     <button id="hit-btn" onclick="hit()" disabled>もう一枚引く</button>
     <button id="stand-btn" onclick="stand()" disabled>勝負</button>
-    <button id="restart-btn" onclick="resetGame()" style="display:none;">もう一度プレイ</button>
+    <button id="restart-btn" onclick="resetGame()" style="display:none;">勝負を続ける</button>
+    <button id="reset-all-btn" onclick="resetAll()">最初からやり直す</button>
   </div>
 
   <p id="result"></p>
@@ -309,6 +312,15 @@
       const result = document.getElementById("result");
       result.innerText = '';
       result.className = '';
+    }
+
+    function resetAll() {
+      money = 1000;
+      updateMoneyDisplay();
+      resetGame();
+      document.getElementById("start-btn").style.display = "inline-block";
+      document.getElementById("restart-btn").disabled = false;
+      document.getElementById("bet-input").disabled = false;
     }
   </script>
 </body>
