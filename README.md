@@ -56,7 +56,7 @@
       border-radius: 20px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       width: 300px;
-      border: 2px dashed #00ced1;
+      border: 2px solid #00ced1;
     }
 
     .hand h2 {
