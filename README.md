@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>ブラックジャック</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: "Arial Rounded MT Bold", "Comic Sans MS", cursive;
@@ -151,34 +152,35 @@
       color: #1e90ff;
       margin-top: 90px;
     }
-/* スマホの横画面に対応 */
-@media screen and (max-width: 768px) and (orientation: landscape) {
-  .game-area {
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-  }
 
-  .vs-text {
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
+    /* スマホの横画面対応 */
+    @media screen and (max-width: 768px) and (orientation: landscape) {
+      .game-area {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
 
-  .hand {
-    width: 90vw;
-  }
+      .vs-text {
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
 
-  .cards {
-    font-size: 28px;
-  }
+      .hand {
+        width: 90vw;
+      }
 
-  .buttons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-  }
-}
+      .cards {
+        font-size: 28px;
+      }
+
+      .buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -261,7 +263,7 @@
         const span = document.createElement("span");
         span.textContent = card.card;
         span.classList.add("card-animate");
-        span.style.animationDelay = ${i * 0.1}s;
+        span.style.animationDelay = `${i * 0.1}s`;
         playerCardsEl.appendChild(span);
       });
 
@@ -269,7 +271,7 @@
         const span = document.createElement("span");
         span.textContent = (isStand || i === 0) ? card.card : '🂠';
         span.classList.add("card-animate");
-        span.style.animationDelay = ${i * 0.1}s;
+        span.style.animationDelay = `${i * 0.1}s`;
         dealerCardsEl.appendChild(span);
       });
 
@@ -330,9 +332,6 @@
       const playerLabel = document.getElementById("player-label");
       const dealerLabel = document.getElementById("dealer-label");
 
-      playerLabel.innerText = '';
-      dealerLabel.innerText = '';
-
       if (resultClass === 'win') {
         playerLabel.innerText = 'WIN';
         playerLabel.className = 'result-label win-label';
@@ -378,10 +377,8 @@
       displayCards();
       updateMoneyDisplay();
 
-      const result = document.getElementById("result");
-      result.innerText = '';
-      result.className = '';
-
+      document.getElementById("result").innerText = '';
+      document.getElementById("result").className = '';
       document.getElementById("player-label").innerText = '';
       document.getElementById("dealer-label").innerText = '';
       document.getElementById("player-label").className = 'result-label';
