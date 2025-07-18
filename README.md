@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>ブラックジャック</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: "Arial Rounded MT Bold", "Comic Sans MS", cursive;
@@ -150,6 +151,43 @@
       font-weight: bold;
       color: #1e90ff;
       margin-top: 90px;
+    }
+
+    /* ▼▼ スマホ対応 ▼▼ */
+    @media screen and (max-width: 600px) {
+      .game-area {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .hand {
+        width: 90%;
+      }
+
+      .vs-text {
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
+
+      input[type="number"] {
+        width: 80px;
+      }
+
+      .buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+      }
+
+      button {
+        width: 90%;
+        max-width: 300px;
+      }
+
+      .status-bar {
+        font-size: 18px;
+      }
     }
   </style>
 </head>
