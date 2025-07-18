@@ -48,6 +48,7 @@
       gap: 40px;
       margin-top: 30px;
       flex-wrap: wrap;
+      align-items: flex-start;
     }
 
     .hand {
@@ -57,6 +58,7 @@
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       width: 300px;
       border: 2px solid #00ced1;
+      position: relative;
     }
 
     .hand h2 {
@@ -131,6 +133,24 @@
         transform: translateY(0);
       }
     }
+
+    .result-label {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 5px;
+      height: 32px;
+    }
+
+    .win-label { color: #32cd32; text-shadow: 1px 1px 2px #fff; }
+    .lose-label { color: #dc143c; text-shadow: 1px 1px 2px #fff; }
+    .draw-label { color: #1e90ff; text-shadow: 1px 1px 2px #fff; }
+
+    .vs-text {
+      font-size: 36px;
+      font-weight: bold;
+      color: #1e90ff;
+      margin-top: 90px;
+    }
   </style>
 </head>
 <body>
@@ -143,12 +163,16 @@
 
   <div class="game-area">
     <div class="hand">
+      <div id="player-label" class="result-label"></div>
       <h2>あなたの手札</h2>
       <div id="player-cards" class="cards"></div>
       <p>合計: <span id="player-score">0</span></p>
     </div>
 
+    <div class="vs-text">VS</div>
+
     <div class="hand">
+      <div id="dealer-label" class="result-label"></div>
       <h2>ディーラーの手札</h2>
       <div id="dealer-cards" class="cards"></div>
       <p>合計: <span id="dealer-score">?</span></p>
@@ -274,6 +298,30 @@
       const resultElem = document.getElementById("result");
       resultElem.innerText = message;
       resultElem.className = resultClass + ' show';
+
+      const playerLabel = document.getElementById("player-label");
+      const dealerLabel = document.getElementById("dealer-label");
+
+      playerLabel.innerText = '';
+      dealerLabel.innerText = '';
+
+      if (resultClass === 'win') {
+        playerLabel.innerText = 'WIN';
+        playerLabel.className = 'result-label win-label';
+        dealerLabel.innerText = 'LOSE';
+        dealerLabel.className = 'result-label lose-label';
+      } else if (resultClass === 'lose') {
+        playerLabel.innerText = 'LOSE';
+        playerLabel.className = 'result-label lose-label';
+        dealerLabel.innerText = 'WIN';
+        dealerLabel.className = 'result-label win-label';
+      } else {
+        playerLabel.innerText = 'DRAW';
+        dealerLabel.innerText = 'DRAW';
+        playerLabel.className = 'result-label draw-label';
+        dealerLabel.className = 'result-label draw-label';
+      }
+
       document.getElementById("hit-btn").disabled = true;
       document.getElementById("stand-btn").disabled = true;
       document.getElementById("restart-btn").style.display = "inline-block";
@@ -306,6 +354,11 @@
       result.innerText = '';
       result.className = '';
 
+      document.getElementById("player-label").innerText = '';
+      document.getElementById("dealer-label").innerText = '';
+      document.getElementById("player-label").className = 'result-label';
+      document.getElementById("dealer-label").className = 'result-label';
+
       document.getElementById("hit-btn").disabled = false;
       document.getElementById("stand-btn").disabled = false;
       document.getElementById("start-btn").disabled = true;
@@ -322,9 +375,10 @@
       document.getElementById("dealer-cards").innerText = '';
       document.getElementById("player-score").innerText = '0';
       document.getElementById("dealer-score").innerText = '?';
-      const result = document.getElementById("result");
-      result.innerText = '';
-      result.className = '';
+      document.getElementById("player-label").innerText = '';
+      document.getElementById("dealer-label").innerText = '';
+      document.getElementById("result").innerText = '';
+      document.getElementById("result").className = '';
     }
 
     function resetAll() {
