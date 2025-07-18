@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>ブラックジャック</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
       font-family: "Arial Rounded MT Bold", "Comic Sans MS", cursive;
@@ -153,10 +153,10 @@
       margin-top: 90px;
     }
 
-    /* スマホの横画面対応 */
+    /* スマホの横画面（ランドスケープ）のみ対応 */
     @media screen and (max-width: 768px) and (orientation: landscape) {
       .game-area {
-        flex-direction: column;
+        flex-direction: column; /* 横並び→縦並び */
         align-items: center;
         gap: 20px;
       }
@@ -167,11 +167,11 @@
       }
 
       .hand {
-        width: 90vw;
+        width: 90vw; /* 画面幅の90%に調整 */
       }
 
       .cards {
-        font-size: 28px;
+        font-size: 28px; /* 少し小さく */
       }
 
       .buttons {
@@ -188,7 +188,7 @@
   <p class="status-bar">💰 所持金：$<span id="money">1000</span></p>
 
   <label>🎯 ベット額：
-    <input type="number" id="bet-input" min="1" value="100">
+    <input type="number" id="bet-input" min="1" value="100" />
   </label>
 
   <div class="game-area">
